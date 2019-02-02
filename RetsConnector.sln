@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetsConnector", "RetsConnector\RetsConnector.csproj", "{C20EF9D1-BA44-4E4F-AEEC-256F91A216FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetsSdk", "RetsSdk\RetsSdk.csproj", "{4AEE853E-7969-44F1-90F3-E8ED9DAA7D94}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C20EF9D1-BA44-4E4F-AEEC-256F91A216FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C20EF9D1-BA44-4E4F-AEEC-256F91A216FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C20EF9D1-BA44-4E4F-AEEC-256F91A216FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C20EF9D1-BA44-4E4F-AEEC-256F91A216FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AEE853E-7969-44F1-90F3-E8ED9DAA7D94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AEE853E-7969-44F1-90F3-E8ED9DAA7D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AEE853E-7969-44F1-90F3-E8ED9DAA7D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AEE853E-7969-44F1-90F3-E8ED9DAA7D94}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02802783-C58B-4204-A459-8A950AB4DDF1}
+	EndGlobalSection
+EndGlobal

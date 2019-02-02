@@ -1,0 +1,8 @@
+RetsConnector/appsettings.Development.json
+RetsConnector/Downloads/*
+RetsConnector/bin
+RetsConnector/obj
+RetsSdk/bin
+RetsSdk/obj
+.vs
+.git
