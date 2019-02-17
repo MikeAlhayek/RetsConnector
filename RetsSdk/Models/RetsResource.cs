@@ -1,5 +1,8 @@
-﻿using System;
+﻿using RetsSdk.Services;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RetsSdk.Models
 {
@@ -35,6 +38,26 @@ namespace RetsSdk.Models
         public RetsObjectCollection Objects { get; set; }
         public RetsLookupCollection Lookups { get; set; }
 
+
+
+        public async Task<RetsClassCollection> GetClasses(Session session)
+        {
+            if(Classes == null)
+            {
+                Classes = await session.GetClassesMetadata(ResourceId);
+            }
+
+            return Classes;
+        }
+
+        public async Task<RetsClass> GetClass(Session session, string className)
+        {
+            var _classes = await GetClasses(session);
+
+            RetsClass _class = _classes.Get().FirstOrDefault(x => x.ClassName.Equals(className, StringComparison.CurrentCultureIgnoreCase));
+
+            return _class;
+        }
 
     }
 }

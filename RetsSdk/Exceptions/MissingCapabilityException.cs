@@ -7,7 +7,6 @@ namespace RetsSdk.Exceptions
         public MissingCapabilityException()
             : base("The requested capability does not exists")
         {
-
         }
     }
 }

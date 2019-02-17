@@ -1,4 +1,5 @@
 ﻿using RetsSdk.Contracts;
+using RetsSdk.Helpers.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -63,8 +64,6 @@ namespace RetsSdk.Models
                 throw new NullReferenceException("{xElement} cannot be null");
             }
 
-            //var collection = Activator.CreateInstance(type);
-
             // First, we check all attributes on the XElement
             // for any attribute that match the element, we would set the value accordingly.
             foreach (PropertyInfo property in type.GetProperties())
@@ -76,10 +75,7 @@ namespace RetsSdk.Models
                     continue;
                 }
 
-                // At this point we found attribute that match the property name
-                object safeValue = GetSafeObject(property.PropertyType, attribute.Value);
-
-                property.SetValue(this, safeValue, null);
+                SetValueSafely(this, property, attribute.Value);
             }
 
             // Second, foreach child in the XElement's children, we need to cast it into the generic model then add it to the collection
@@ -97,45 +93,39 @@ namespace RetsSdk.Models
             Add(model);
         }
 
-        protected object GetSafeObject(Type type, string value)
-        {
-            if (Nullable.GetUnderlyingType(type) != null && string.IsNullOrWhiteSpace(value))
-            {
-                return null;
-            }
-
-            Type trueType = Nullable.GetUnderlyingType(type) ?? type;
-
-
-            if (trueType == typeof(string))
-            {
-                return value;
-            }
-
-            if (trueType.IsEnum)
-            {
-                return Enum.Parse(trueType, value);
-            }
-
-            if (trueType == typeof(bool))
-            {
-                if (bool.TryParse(value, out bool isValid))
-                {
-                    return isValid;
-                }
-
-                return false;
-            }
-
-            TypeConverter tc = TypeDescriptor.GetConverter(type);
-
-
-            return tc.ConvertFromString(value);
-        }
 
         protected T Cast(XElement element)
         {
             var entity = new T();
+
+            XElement parent = element.Parent;
+
+            IEnumerable<PropertyInfo> properties = typeof(T).GetProperties();
+
+
+            // Set the entity properites using the current attributes
+            foreach (PropertyInfo property in properties)
+            {
+                if (parent != null)
+                {
+                    // We first check for any attributes that match this property on the parent and set it
+                    var parentAttribute = parent.Attribute(property.Name);
+
+                    if (parentAttribute != null)
+                    {
+                        SetValueSafely(entity, property, parentAttribute.Value);
+                    }
+                }
+
+                // Second, check for any attributes that match this property on element directly
+                // This value will override the previous value if one already is set
+                var attribute = element.Attribute(property.Name);
+
+                if (attribute != null)
+                {
+                    SetValueSafely(entity, property, attribute.Value);
+                }                
+            }
 
             // First, foreach child on the given XElement object, find a propery with the same name as the child's localname and set its value accordingly
             foreach (XElement child in element.Elements())
@@ -147,14 +137,12 @@ namespace RetsSdk.Models
                     continue;
                 }
 
-                object safeValue = GetSafeObject(property.PropertyType, child.Value);
-
-                property.SetValue(entity, safeValue, null);
+                SetValueSafely(entity, property, child.Value);
             }
 
             // Second, foreach property of the generic entity that implements IMetadataCollection<ANYTHING>
             // find the sub Element and call Load() method using different generics
-            var subCollections = GetGenericType().GetProperties().Where(x => typeof(IRetsCollectionXElementLoader).IsAssignableFrom(x.PropertyType)).ToList();
+            var subCollections = properties.Where(x => typeof(IRetsCollectionXElementLoader).IsAssignableFrom(x.PropertyType)).ToList();
 
             foreach (PropertyInfo subCollection in subCollections)
             {
@@ -176,21 +164,23 @@ namespace RetsSdk.Models
                 IRetsCollectionXElementLoader newCollection = (IRetsCollectionXElementLoader)Activator.CreateInstance(subCollection.PropertyType);
                 newCollection.Load(metaDataNode);
 
-                //MethodInfo loadMethod = subCollection.PropertyType.GetMethod("Load", new Type[] { typeof(XElement) });
-                //loadMethod.Invoke(newCollection, new object[] { metaDataNode });
 
                 subCollection.SetValue(entity, newCollection, null);
-
-                //loadMethod.Invoke(subCollection.GetValue(subCollection, null), new object[] { metaDataNode });
-                // Since subCollection type implements IMetadataCollection<ANYTHING>
-                // I somehow need to call the Load(metaDataNode) method on its instance
-
             }
 
 
             return entity;
         }
 
+        private static void SetValueSafely(object entity, PropertyInfo property, string value)
+        {
+            object safeValue = property.PropertyType.GetSafeObject(value);
+
+            property.SetValue(entity, safeValue, null);
+        }
+
         public abstract void Load(XElement xElement);
+        public abstract T Get(object value);
+
     }
 }

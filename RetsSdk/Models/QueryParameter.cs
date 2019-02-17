@@ -23,7 +23,7 @@
                 return string.Empty;
             }
 
-            return string.Format("{0}={1}", FieldName, Value);
+            return string.Format("({0}={1})", FieldName, Value);
         }
     }
 }

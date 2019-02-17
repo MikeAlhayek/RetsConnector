@@ -1,4 +1,5 @@
 ﻿using RetsSdk.Models.Enums;
+using System;
 
 namespace RetsSdk.Models
 {
@@ -10,5 +11,11 @@ namespace RetsSdk.Models
         public string UserAgent { get; set; }
         public string RetsServerVersion { get; set; } = "RETS/1.7.2";
         public string LoginUrl { get; set; }
+        public TimeSpan Timeout { get; set; }
+
+        public ConnectionOptions()
+        {
+            Timeout = TimeSpan.FromHours(4);
+        }
     }
 }

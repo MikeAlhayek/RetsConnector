@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RetsSdk.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace RetsSdk.Models
 {
     public class RetsClass
     {
+        public string Resource { get; set; }
         public string ClassName { get; set; }
         public string StandardName { get; set; }
         public string VisibleName { get; set; }
@@ -14,6 +16,16 @@ namespace RetsSdk.Models
         public string UpdateVersion { get; set; }
         public DateTime? UpdateDate { get; set; }
 
-        public RetsTableCollection Fields { get; set; }
+        public RetsFieldCollection Fields { get; set; }
+
+        public async Task<RetsFieldCollection> GetFields(Session session)
+        {
+            if (Fields == null)
+            {
+                Fields = await session.GetTableMetadata(Resource, ClassName);
+            }
+
+            return Fields;
+        }
     }
 }

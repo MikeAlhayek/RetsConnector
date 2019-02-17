@@ -1,4 +1,5 @@
-﻿using RetsSdk.Models;
+﻿using Microsoft.Extensions.Logging;
+using RetsSdk.Models;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -8,18 +9,30 @@ namespace RetsSdk.Services
 {
     public class RetsClient
     {
-        private ConnectionOptions Options;
+        protected ConnectionOptions Options;
+        protected ILogger Log { get; private set; }
 
         public RetsClient(ConnectionOptions options)
         {
             Options = options;
         }
 
+        public RetsClient(ConnectionOptions options, ILogger log)
+            : this(options)
+        {
+            SetLogger(log);
+        }
+
+        public void SetLogger(ILogger log)
+        {
+            Log = log;
+        }
 
         public async Task Get(Uri uri, Func<HttpResponseMessage, Task> action)
         {
             using (var client = GetClient())
             {
+                client.Timeout = Options.Timeout;
                 client.DefaultRequestHeaders.Add("User-Agent", Options.UserAgent);
                 client.DefaultRequestHeaders.Add("RETS-Version", Options.RetsServerVersion);
                 client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip");
@@ -39,6 +52,7 @@ namespace RetsSdk.Services
 
             using (var client = GetClient())
             {
+                client.Timeout = Options.Timeout;
                 client.DefaultRequestHeaders.Add("User-Agent", Options.UserAgent);
                 client.DefaultRequestHeaders.Add("RETS-Version", Options.RetsServerVersion);
                 client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip");
@@ -72,6 +86,7 @@ namespace RetsSdk.Services
 
             using (var client = GetClient())
             {
+                client.Timeout = Options.Timeout;
                 client.DefaultRequestHeaders.Add("User-Agent", Options.UserAgent);
                 client.DefaultRequestHeaders.Add("RETS-Version", Options.RetsServerVersion);
                 client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip");
@@ -100,7 +115,7 @@ namespace RetsSdk.Services
 
         private HttpClient GetClient()
         {
-            if(Options.Type == Models.Enums.AuthenticationType.Digest)
+            if (Options.Type == Models.Enums.AuthenticationType.Digest)
             {
                 var credCache = new CredentialCache();
                 credCache.Add(new Uri(Options.LoginUrl), Options.Type.ToString(), new NetworkCredential(Options.Username, Options.Password));

@@ -2,7 +2,7 @@
 {
     public class PhotoId
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public int? ObjectId { get; set; }
 
         public PhotoId()
@@ -10,7 +10,7 @@
 
         }
 
-        public PhotoId(int id, int? objectId = null)
+        public PhotoId(long id, int? objectId = null)
         {
             Id = id;
             ObjectId = objectId;

@@ -4,6 +4,7 @@ using RetsSdk.Models;
 using RetsSdk.Models.Enums;
 using RetsSdk.Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,16 +32,14 @@ namespace RetsConnector
             if (environment == "Development")
             {
 
-                builder
-                    .AddJsonFile(
+                builder.AddJsonFile(
                         Path.Combine(AppContext.BaseDirectory, string.Format("..{0}..{0}..{0}", Path.DirectorySeparatorChar), $"appsettings.{environment}.json"),
                         optional: true
                     );
             }
             else
             {
-                builder
-                    .AddJsonFile($"appsettings.{environment}.json", optional: false);
+                builder.AddJsonFile($"appsettings.{environment}.json", optional: false);
             }
 
             Configuration = builder.Build();
@@ -57,10 +56,13 @@ namespace RetsConnector
 
             try
             {
-
                 Task.Run(async () =>
                 {
+
+
                     var session = new Session(options);
+
+                    //
 
                     await session.Connect();
 
@@ -75,9 +77,11 @@ namespace RetsConnector
 
                     //await session.Search(searchRequest);
 
-                    foreach(var file in files)
+                    foreach (var file in files)
                     {
-                        using (FileStream output = File.Create("../../../Downloads/" + file.MakeFileName()))
+                        var filePath = $"{file.ContentId}/{file.ObjectId}{file.Extension}";
+
+                        using (FileStream output = File.Create("../../../Downloads/" + filePath))
                         {
                             file.Content.CopyTo(output);
                             file.Dispose();
@@ -95,9 +99,20 @@ namespace RetsConnector
 
                     RetsLookupTypeCollection lookupValues = await session.GetLookupValues("Property", "*");
 
-                    RetsTableCollection tables = await session.GetTableMetadata("Property", "Listing");
+                    RetsFieldCollection tables = await session.GetTableMetadata("Property", "Listing");
 
                     await session.Disconnect();
+
+                    var photos = new List<PhotoId>() { new PhotoId(1), new PhotoId(2) };
+
+                    // to save some code you can do call RoundTrip() which will connect, call out method, then discconnect();
+                    var result = await session.RoundTrip(async () =>
+                    {
+                        // Batch size will allow us to auto break multiple requests into a smaller batched
+                        // IF you want to download lots of images, the server may retrn 404 error due to too many params in the request
+                        // this will allow you to break the request into multiple request and do the job 
+                        return await session.GetObject("Property", "Photo", photos, batchSize: 20);
+                    });
 
                 });
 

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace RetsSdk.Models
@@ -11,7 +13,14 @@ namespace RetsSdk.Models
 
         public override void Load(XElement xElement)
         {
-            Load(this.GetType(), xElement);
+            Load(GetType(), xElement);
+        }
+
+        public override RetsLookup Get(object value)
+        {
+            RetsLookup item = Get().FirstOrDefault(x => x.LookupName.Equals(value.ToString(), StringComparison.CurrentCultureIgnoreCase));
+
+            return item;
         }
     }
 }

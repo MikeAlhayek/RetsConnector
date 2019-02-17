@@ -9,7 +9,7 @@ namespace RetsSdk.Models
         public string SearchType { get; set; }
         public string Class { get; set; }
         public string QueryType { get; set; } = "DMQL2";
-        public int Count { get; set; } = 1;
+        public int Count { get; set; } = 0;
         public string Format { get; set; } = "COMPACT-DECODED"; // COMPACT-DECODED
         public string RestrictedIndicator { get; set; } = "****";
         public int Limit { get; set; } = int.MaxValue;
@@ -68,9 +68,16 @@ namespace RetsSdk.Models
         }
 
 
+        public bool HasColumn(string columnName)
+        {
+            bool exists = Columns.Any(x => x.Equals(columnName, StringComparison.CurrentCultureIgnoreCase));
+
+            return exists;
+        }
+
         public IEnumerable<string> GetColumns()
         {
-            return Columns;
+            return Columns.Distinct();
         }
     }
 }

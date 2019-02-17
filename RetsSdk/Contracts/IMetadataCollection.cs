@@ -9,6 +9,7 @@ namespace RetsSdk.Contracts
         void Add(T resource);
         void Remove(T resource);
         IEnumerable<T> Get();
+        T Get(object value);
 
         Type GetGenericType();
     }

@@ -7,7 +7,6 @@ namespace RetsSdk.Exceptions
         public ResourceDoesNotExists()
             : base("The given resource does not exists.")
         {
-
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace RetsSdk.Models
 {
@@ -9,6 +8,7 @@ namespace RetsSdk.Models
         public DateTime? Date { get; set; }
         public string SystemId { get; set; }
         public string SystemDescription { get; set; }
+        public string TimeZoneOffset { get; set; } // Not sure what is the proper type but it could be Time.
 
         public RetsResourceCollection Resources { get; set; }
     }

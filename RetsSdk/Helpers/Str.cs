@@ -53,5 +53,27 @@ namespace RetsSdk.Helpers
 
             return result;
         }
+
+
+        public static string AppendOnce(string orginal, string toAppend)
+        {
+            if (orginal == null || orginal.EndsWith(toAppend))
+            {
+                return orginal;
+            }
+
+            return orginal + toAppend;
+        }
+
+
+        public static string PrependOnce(string orginal, string toAppend)
+        {
+            if (orginal == null || orginal.StartsWith(toAppend))
+            {
+                return orginal;
+            }
+
+            return toAppend + orginal;
+        }
     }
 }
