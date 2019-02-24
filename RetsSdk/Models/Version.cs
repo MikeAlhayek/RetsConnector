@@ -28,7 +28,7 @@ namespace CrestApps.RetsSdk.Models
             Major = ParseValue(parts[0]);
             Minor = ParseValue(parts[1]);
 
-            if (totalParts == 2)
+            if (totalParts == 3)
             {
                 Patch = ParseValue(parts[2]);
             }
@@ -63,9 +63,9 @@ namespace CrestApps.RetsSdk.Models
                 throw new ArgumentNullException($"{nameof(version)} cannot be null.");
             }
 
-            string[] parts = version.Split('.');
+            string[] parts = version.Replace('_','.').Split('.');
             int totalParts = parts.Length;
-            if (totalParts == 0 || totalParts > 2)
+            if (totalParts == 0 || totalParts > 3)
             {
                 throw new VersionParsingException();
             }
