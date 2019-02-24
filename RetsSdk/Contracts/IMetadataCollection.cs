@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace RetsSdk.Contracts
+namespace CrestApps.RetsSdk.Contracts
 {
     public interface IMetadataCollection<T> where T : class
     {

@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace RetsSdk.Contracts
+namespace CrestApps.RetsSdk.Contracts
 {
     public interface IRetsCollectionXElementLoader
     {

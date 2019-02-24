@@ -1,8 +1,8 @@
-﻿using RetsSdk.Services;
+﻿using CrestApps.RetsSdk.Services;
 using System;
 using System.Threading.Tasks;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class RetsClass
     {
@@ -18,7 +18,7 @@ namespace RetsSdk.Models
 
         public RetsFieldCollection Fields { get; set; }
 
-        public async Task<RetsFieldCollection> GetFields(Session session)
+        public async Task<RetsFieldCollection> GetFields(IRetsClient session)
         {
             if (Fields == null)
             {
@@ -27,5 +27,6 @@ namespace RetsSdk.Models
 
             return Fields;
         }
+
     }
 }

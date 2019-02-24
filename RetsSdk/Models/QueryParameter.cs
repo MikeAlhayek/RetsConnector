@@ -1,4 +1,4 @@
-﻿namespace RetsSdk.Models
+﻿namespace CrestApps.RetsSdk.Models
 {
     public class QueryParameter
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class SearchResult
     {

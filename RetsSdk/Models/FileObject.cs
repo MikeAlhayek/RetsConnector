@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net.Mime;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class FileObject : IDisposable
     {

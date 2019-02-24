@@ -1,6 +1,6 @@
-﻿using RetsSdk.Helpers.Extensions;
+﻿using CrestApps.RetsSdk.Helpers.Extensions;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class SearchResultCellValue
     {

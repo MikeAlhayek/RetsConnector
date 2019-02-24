@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class SearchResultRow
     {

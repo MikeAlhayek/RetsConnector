@@ -1,7 +1,7 @@
-﻿using RetsSdk.Models.Enums;
+﻿using CrestApps.RetsSdk.Models.Enums;
 using System;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class ConnectionOptions
     {
@@ -9,13 +9,16 @@ namespace RetsSdk.Models
         public string Password { get; set; }
         public AuthenticationType Type { get; set; }
         public string UserAgent { get; set; }
-        public string RetsServerVersion { get; set; } = "RETS/1.7.2";
+        public string UserAgentPassward { get; set; }
+        public SupportedRetsVersion RetsServerVersion { get; set; } = SupportedRetsVersion.Version_1_7_2;
         public string LoginUrl { get; set; }
         public TimeSpan Timeout { get; set; }
 
         public ConnectionOptions()
         {
-            Timeout = TimeSpan.FromHours(4);
+            Timeout = TimeSpan.FromHours(1);
         }
+
+        public RetsVersion Version => new RetsVersion(RetsServerVersion);
     }
 }

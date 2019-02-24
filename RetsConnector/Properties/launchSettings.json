@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "RetsConnector": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

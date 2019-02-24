@@ -1,10 +1,9 @@
-﻿using RetsSdk.Services;
+﻿using CrestApps.RetsSdk.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class RetsResource
     {
@@ -33,16 +32,13 @@ namespace RetsSdk.Models
         public string ValidationExternalVersion { get; set; }
         public DateTime? ValidationExternalDate { get; set; }
 
-
         public RetsClassCollection Classes { get; set; }
         public RetsObjectCollection Objects { get; set; }
         public RetsLookupCollection Lookups { get; set; }
 
-
-
-        public async Task<RetsClassCollection> GetClasses(Session session)
+        public async Task<RetsClassCollection> GetClasses(IRetsClient session)
         {
-            if(Classes == null)
+            if (Classes == null)
             {
                 Classes = await session.GetClassesMetadata(ResourceId);
             }
@@ -50,7 +46,7 @@ namespace RetsSdk.Models
             return Classes;
         }
 
-        public async Task<RetsClass> GetClass(Session session, string className)
+        public async Task<RetsClass> GetClass(IRetsClient session, string className)
         {
             var _classes = await GetClasses(session);
 

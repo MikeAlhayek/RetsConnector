@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RetsSdk.Models.Enums
+namespace CrestApps.RetsSdk.Models.Enums
 {
     public enum RetsInterpretation
     {

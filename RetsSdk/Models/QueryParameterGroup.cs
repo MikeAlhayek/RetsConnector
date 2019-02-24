@@ -1,8 +1,8 @@
-﻿using RetsSdk.Models.Enums;
+﻿using CrestApps.RetsSdk.Models.Enums;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class QueryParameterGroup
     {

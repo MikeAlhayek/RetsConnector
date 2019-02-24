@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class RetsSystem
     {

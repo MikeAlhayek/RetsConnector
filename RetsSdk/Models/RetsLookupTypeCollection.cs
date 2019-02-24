@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     [Description("METADATA-LOOKUP_TYPE")]
     public class RetsLookupTypeCollection : RetsCollection<RetsLookupType>

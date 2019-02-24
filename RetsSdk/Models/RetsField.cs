@@ -1,6 +1,9 @@
-﻿using RetsSdk.Models.Enums;
+﻿using CrestApps.RetsSdk.Models.Enums;
+using CrestApps.RetsSdk.Services;
+using System;
+using System.Threading.Tasks;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class RetsField
     {
@@ -28,6 +31,19 @@ namespace RetsSdk.Models
         public bool Required { get; set; }
         public string SearchHelpId { get; set; }
         public bool Unique { get; set; }
+        public bool ModTimeStamp { get; set; }
         public bool InKeyIndex { get; set; }
+
+        public RetsLookupTypeCollection LookupTypes { get; set; }
+
+        public async Task<RetsLookupTypeCollection> GetLookupTypes(IRetsClient session, string resourceId)
+        {
+            if (LookupTypes == null && Interpretation.StartsWith("Lookup", StringComparison.CurrentCultureIgnoreCase))
+            {
+                LookupTypes = await session.GetLookupValues(resourceId, SystemName);
+            }
+
+            return LookupTypes;
+        }
     }
 }

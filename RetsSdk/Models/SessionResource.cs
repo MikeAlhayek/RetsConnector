@@ -1,9 +1,9 @@
-﻿using RetsSdk.Exceptions;
-using RetsSdk.Models.Enums;
+﻿using CrestApps.RetsSdk.Exceptions;
+using CrestApps.RetsSdk.Models.Enums;
 using System;
 using System.Collections.Generic;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public class SessionResource
     {

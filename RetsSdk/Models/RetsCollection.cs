@@ -1,5 +1,5 @@
-﻿using RetsSdk.Contracts;
-using RetsSdk.Helpers.Extensions;
+﻿using CrestApps.RetsSdk.Contracts;
+using CrestApps.RetsSdk.Helpers.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 
-namespace RetsSdk.Models
+namespace CrestApps.RetsSdk.Models
 {
     public abstract class RetsCollection<T> : IMetadataCollection, IMetadataCollectionLoad, IRetsCollectionXElementLoader, IMetadataCollection<T> where T : class, new()
     {

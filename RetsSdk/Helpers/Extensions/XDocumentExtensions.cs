@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace RetsSdk.Helpers.Extensions
+namespace CrestApps.RetsSdk.Helpers.Extensions
 {
     public static class XDocumentExtensions
     {

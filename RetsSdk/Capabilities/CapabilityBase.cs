@@ -1,6 +1,6 @@
-﻿using RetsSdk.Models.Enums;
+﻿using CrestApps.RetsSdk.Models.Enums;
 
-namespace RetsSdk.Capabilities
+namespace CrestApps.RetsSdk.Capabilities
 {
     public class CapabilityBase
     {
