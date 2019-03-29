@@ -12,8 +12,9 @@ Although this library has been tested with version 1.7.2 using digest authentica
 
 The RetsConnector project is a console app with an example of how to connect to the RETS server.
 
-But here is some code example of how to connect"
+But here is some code example of how to connect
 
+```cs
 // First we need to set out configuration           
 Service.AddTransient(opts => new ConnectionOptions()
 {
@@ -174,7 +175,7 @@ IEnumerable<FileObject> files4 = await client.RoundTrip(async () =>
     // Each batch will cause a round trip. In other words, each batch will connect, download a batch, then disconnect.
     return await client.GetObject("Property", "Photo", photoIds, batchSize: 20);
 });
-
+```
 
 ## License
 
