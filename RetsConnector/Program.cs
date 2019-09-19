@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace RetsConnector
 {
@@ -38,6 +39,10 @@ namespace RetsConnector
             Service.AddTransient<IRetsRequester, RetsWebRequester>();
             Service.AddTransient<IRetsSession, RetsSession>();
             Service.AddTransient<IRetsClient, RetsClient>();
+            Service.AddLogging(_ =>
+            {
+                _.AddConsole();
+            });
 
             // Create out IoC container
             Container = Service.BuildServiceProvider();

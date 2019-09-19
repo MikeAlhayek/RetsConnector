@@ -19,7 +19,7 @@ namespace CrestApps.RetsSdk.Services
         protected Uri LoginUri => new Uri(Options.LoginUrl);
         protected Uri LogoutUri => Resource.GetCapability(Capability.Logout);
 
-        public RetsSession(ILogger logger, IRetsRequester retsRequester, ConnectionOptions connectionOptions)
+        public RetsSession(ILogger<RetsSession> logger, IRetsRequester retsRequester, ConnectionOptions connectionOptions)
             : base(logger)
         {
             RetsRequester = retsRequester;
