@@ -6,29 +6,21 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace CrestApps.RetsSdk.Services
 {
     public class RetsWebRequester : IRetsRequester
     {
-        protected ConnectionOptions Options;
-        protected ILogger Log { get; private set; }
+        private readonly ConnectionOptions Options;
+        private readonly IHttpClientFactory HttpClientFactory;
 
-        public RetsWebRequester(ConnectionOptions options)
+        public RetsWebRequester(IOptions<ConnectionOptions> options, IHttpClientFactory httpClientFactory)
         {
-            Options = options;
+            Options = options.Value;
+            HttpClientFactory = httpClientFactory;
         }
 
-        public RetsWebRequester(ConnectionOptions options, ILogger log)
-            : this(options)
-        {
-            SetLogger(log);
-        }
-
-        public void SetLogger(ILogger log)
-        {
-            Log = log;
-        }
 
         public async Task Get(Uri uri, Action<HttpResponseMessage> action, SessionResource resource = null, bool ensureSuccessStatusCode = true)
         {
@@ -68,7 +60,6 @@ namespace CrestApps.RetsSdk.Services
 
         protected virtual HttpClient GetClient(SessionResource resource)
         {
-
             HttpClient client = GetAuthenticatedClient();
 
             client.Timeout = Options.Timeout;
@@ -100,13 +91,12 @@ namespace CrestApps.RetsSdk.Services
                 return new HttpClient(new HttpClientHandler { Credentials = credCache });
             }
 
-            var client = new HttpClient();
+            HttpClient client = HttpClientFactory.CreateClient();
 
-            var byteArray = Encoding.ASCII.GetBytes($"{Options.Username}:{Options.Password}");
+            byte[] byteArray = Encoding.ASCII.GetBytes($"{Options.Username}:{Options.Password}");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
             return client;
-
         }
     }
 }

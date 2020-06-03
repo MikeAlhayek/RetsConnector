@@ -8,10 +8,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.Extensions.Options;
 
 namespace CrestApps.RetsSdk.Services
 {
-    public class RetsSession : RetsResponseBase, IRetsSession
+    public class RetsSession : RetsResponseBase<RetsSession>, IRetsSession
     {
         protected readonly IRetsRequester RetsRequester;
         protected readonly ConnectionOptions Options;
@@ -19,11 +20,11 @@ namespace CrestApps.RetsSdk.Services
         protected Uri LoginUri => new Uri(Options.LoginUrl);
         protected Uri LogoutUri => Resource.GetCapability(Capability.Logout);
 
-        public RetsSession(ILogger<RetsSession> logger, IRetsRequester retsRequester, ConnectionOptions connectionOptions)
+        public RetsSession(ILogger<RetsSession> logger, IRetsRequester retsRequester, IOptions<ConnectionOptions> connectionOptions)
             : base(logger)
         {
             RetsRequester = retsRequester;
-            Options = connectionOptions;
+            Options = connectionOptions.Value;
         }
 
         private SessionResource _Resource;

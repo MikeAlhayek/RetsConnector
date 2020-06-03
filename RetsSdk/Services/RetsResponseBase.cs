@@ -10,11 +10,11 @@ using System.Xml.Linq;
 
 namespace CrestApps.RetsSdk.Services
 {
-    public abstract class RetsResponseBase
+    public abstract class RetsResponseBase<T>
     {
-        protected readonly ILogger Log;
+        protected readonly ILogger<T> Log;
 
-        public RetsResponseBase(ILogger log)
+        public RetsResponseBase(ILogger<T> log)
         {
             Log = log;
         }

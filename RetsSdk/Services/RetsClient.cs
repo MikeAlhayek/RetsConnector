@@ -17,7 +17,7 @@ using System.Xml.Linq;
 
 namespace CrestApps.RetsSdk.Services
 {
-    public class RetsClient : RetsResponseBase, IRetsClient
+    public class RetsClient : RetsResponseBase<RetsClient>, IRetsClient
     {
         private readonly IRetsRequester Requester;
         private readonly IRetsSession Session;
@@ -106,8 +106,6 @@ namespace CrestApps.RetsSdk.Services
                         XElement columns = doc.Descendants(ns + "COLUMNS").FirstOrDefault();
 
                         IEnumerable<XElement> records = doc.Descendants(ns + "DATA");
-
-
 
                         string[] tableColumns = columns.Value.Split(delimiterValue);
                         result.SetColumns(tableColumns);

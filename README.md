@@ -1,6 +1,6 @@
 # CrestApps RetsSdk
 
-.NET Core client library for interacting with a RETS server to pull real estate listings, photos, and other data made available from an MLS system.
+.NET Core 3 based client library for interacting with a RETS server to pull real estate listings, photos, and other data made available from an MLS system.
 
 Although this library has been tested with version 1.7.2 using digest authentication, it should work for versions 1.5, 1.7, 1.7.1, 1.7.2 and 1.8 using basic or digest authentication.
 
@@ -15,28 +15,40 @@ The RetsConnector project is a console app with an example of how to connect to 
 But here is some code example of how to connect
 
 ```cs
-// First we need to set out configuration           
-Service.AddTransient(opts => new ConnectionOptions()
-{
-    UserAgent = "user-agent",
-    RetsServerVersion = SupportedRetsVersion.Version_1_7_2,
-    LoginUrl = "Login-URI",
-    Username = "username",
-    Password = "password",
-    UserAgentPassward = "agent password if you have one",
-    Type = AuthenticationType.Digest,
-});
+// 1) Register HttpClientFactory
+services.AddHttpClient();
 
-// Register the IRetsRequester, IRetsSession, IRetsClient
-Service.AddTransient<IRetsRequester, RetsWebRequester>();
-Service.AddTransient<IRetsSession, RetsSession>();
-Service.AddTransient<IRetsClient, RetsClient>();
+// 2) Register the IRetsRequester
+services.AddTransient<IRetsRequester, RetsWebRequester>();
+
+// 3) Register the IRetsSession
+services.AddTransient<IRetsSession, RetsSession>();
+
+// 4) Register the IRetsClient
+services.AddTransient<IRetsClient, RetsClient>();
+
+// 5) Register the ILogger
+services.AddLogging();
+
+// 6) Register the connection options
+services.AddOptions<ConnectionOptions>()
+        .Configure((opts) =>
+        {
+            opts.UserAgent = hostContext.Configuration["Rets:UserAgent"];
+            opts.RetsServerVersion = RetsVersion.Make(hostContext.Configuration["Rets:ServerVersion"]);
+            opts.LoginUrl = hostContext.Configuration["Rets:LoginUrl"];
+            opts.Username = hostContext.Configuration["Rets:Username"];
+            opts.Password = hostContext.Configuration["Rets:Password"];
+            opts.UserAgentPassward = hostContext.Configuration["Rets:UserAgentPassward"];
+            opts.Type = Enum.Parse<AuthenticationType>(hostContext.Configuration["Rets:Type"], true);
+            opts.Timeout = TimeSpan.FromHours(1);
+        });
 
 // Create out IoC container
-Container = Service.BuildServiceProvider();
+IServiceProvider container = Service.BuildServiceProvider();
 
 // Get instance of the IRetsClient from the IoC
-IRetsClient client = Container.GetService<IRetsClient>();
+IRetsClient client = container.GetService<IRetsClient>();
 
 // The first request we make to the RETS server is to login
 await client.Connect();
