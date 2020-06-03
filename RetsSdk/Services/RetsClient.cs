@@ -26,7 +26,7 @@ namespace CrestApps.RetsSdk.Services
         protected Uri SearchUri => Session.Resource.GetCapability(Capability.Search);
         protected Uri GetMetadataUri => Session.Resource.GetCapability(Capability.GetMetadata);
 
-        public RetsClient(IRetsSession session, IRetsRequester requester, ILogger logger)
+        public RetsClient(IRetsSession session, IRetsRequester requester, ILogger<RetsClient> logger)
             : base(logger)
         {
             Session = session ?? throw new ArgumentNullException($"{nameof(session)} cannot be null");
