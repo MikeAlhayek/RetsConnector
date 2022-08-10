@@ -6,6 +6,7 @@
         Version_1_7,
         Version_1_7_1,
         Version_1_7_2,
-        Version_1_8
+        Version_1_8,
+        Version_1_9,
     }
 }

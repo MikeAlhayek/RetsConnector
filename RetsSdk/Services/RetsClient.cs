@@ -381,6 +381,35 @@ namespace CrestApps.RetsSdk.Services
 
                     if (entity is MimePart message)
                     {
+                        if (!message.Headers.Contains("Object-ID") && response.Headers.TryGetValues("Object-ID", out var objectIds))
+                        {
+                            message.Headers.Add("Object-ID", objectIds.FirstOrDefault());
+                        }
+                        if (!message.Headers.Contains("Content-Description") && response.Headers.TryGetValues("Content-Description", out var contentDescriptions))
+                        {
+                            message.Headers.Add("Content-Description", contentDescriptions.FirstOrDefault());
+                        }
+                        if (!message.Headers.Contains("Content-Sub-Description") && response.Headers.TryGetValues("Content-Sub-Description", out var contentSubDescriptions))
+                        {
+                            message.Headers.Add("Content-Sub-Description", contentSubDescriptions.FirstOrDefault());
+                        }
+                        if (!message.Headers.Contains("MIME-Version") && response.Headers.TryGetValues("MIME-Version", out var mimeVersions))
+                        {
+                            message.Headers.Add("MIME-Version", mimeVersions.FirstOrDefault());
+                        }
+                        if (!message.Headers.Contains("Preferred") && response.Headers.TryGetValues("Preferred", out var preferreds))
+                        {
+                            message.Headers.Add("Preferred", preferreds.FirstOrDefault());
+                        }                        
+                        if (message.ContentId == null && response.Headers.TryGetValues("Content-Id", out var contentIds))
+                        {
+                            message.ContentId = contentIds.FirstOrDefault();
+                        }
+                        if (message.ContentLocation == null && response.Headers.TryGetValues("Content-Location", out var contentLocations))
+                        {
+                            message.ContentLocation = new Uri(contentLocations.FirstOrDefault());
+                        }
+
                         // At this point we know this is a single image response
                         files.Add(ProcessMessage(message));
                     }
