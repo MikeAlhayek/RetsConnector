@@ -405,6 +405,7 @@ namespace CrestApps.RetsSdk.Services
                         {
                             message.ContentId = contentIds.FirstOrDefault();
                         }
+                        
                         if (message.ContentLocation == null && response.Headers.TryGetValues("Content-Location", out var contentLocations))
                         {
                             message.ContentLocation = new Uri(contentLocations.FirstOrDefault());
@@ -545,7 +546,7 @@ namespace CrestApps.RetsSdk.Services
                 ContentType = new System.Net.Mime.ContentType(message.ContentType.MimeType),
                 ContentDescription = message.Headers["Content-Description"],
                 ContentSubDescription = message.Headers["Content-Sub-Description"],
-                ContentLocation = message.ContentLocation,
+                ContentLocation = message.ContentLocation ?? (message.Headers["Location"] != null ? new Uri(message.Headers["Location"]) : null),
                 MemeVersion = message.Headers["MIME-Version"],
                 Extension = MimeTypeMap.GetExtension(message.ContentType.MimeType)
             };
