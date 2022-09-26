@@ -1,6 +1,7 @@
 ﻿using CrestApps.RetsSdk.Contracts;
 using CrestApps.RetsSdk.Helpers.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -14,8 +15,8 @@ namespace CrestApps.RetsSdk.Models
         public string Version { get; set; }
         public DateTime Date { get; set; }
 
-        private List<T> Items = new List<T>();
-        private Type _Type;
+        private readonly List<T> Items = new List<T>();
+        private Type Type;
 
         public void Add(T item)
         {
@@ -34,12 +35,12 @@ namespace CrestApps.RetsSdk.Models
 
         public Type GetGenericType()
         {
-            if (_Type == null)
+            if (Type == null)
             {
-                _Type = typeof(T);
+                Type = typeof(T);
             }
 
-            return _Type;
+            return Type;
         }
 
         public void Remove(T item)
@@ -182,5 +183,14 @@ namespace CrestApps.RetsSdk.Models
         public abstract void Load(XElement xElement);
         public abstract T Get(object value);
 
+        public IEnumerator<T> GetEnumerator()
+        {
+            return Items.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Items.GetEnumerator();
+        }
     }
 }
