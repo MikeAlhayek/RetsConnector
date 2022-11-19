@@ -33,9 +33,14 @@ namespace CrestApps.RetsSdk.Services
             Requester = requester ?? throw new ArgumentNullException($"{nameof(requester)} cannot be null");
         }
 
-        public async Task Connect()
+        public bool IsConnected => Session.IsStarted();
+
+        public async Task<bool> Connect()
         {
-            await Session.Start();
+            if (Session.IsStarted()) 
+                return true;
+
+            return await Session.Start();
         }
 
         public async Task Disconnect()
@@ -54,8 +59,7 @@ namespace CrestApps.RetsSdk.Services
 
             if (resource == null)
             {
-                string message = string.Format("The provided '{0}' is not valid. You can get a list of all valid value by calling '{1}' method on the Session object.", nameof(SearchRequest.SearchType), nameof(GetResourcesMetadata));
-
+                var message = $"The provided '{nameof(SearchRequest.SearchType)}' is not valid. You can get a list of all valid value by calling '{nameof(GetResourcesMetadata)}' method on the Session object.";
                 throw new Exception(message);
             }
 
@@ -65,12 +69,15 @@ namespace CrestApps.RetsSdk.Services
             query.Add("SearchType", request.SearchType);
             query.Add("Class", request.Class);
             query.Add("QueryType", request.QueryType);
-            query.Add("Count", request.Count.ToString());
             query.Add("Format", request.Format);
+
+            query.Add("Count", ((int) request.Count).ToString());
             query.Add("Limit", request.Limit.ToString());
+            query.Add("Offset", request.Offset.ToString());
+            
             query.Add("StandardNames", request.StandardNames.ToString());
             query.Add("RestrictedIndicator", request.RestrictedIndicator);
-            query.Add("Query", request.ParameterGroup.ToString());
+            query.Add("Query", request.RawQuery ?? request.ParameterGroup.ToString());
 
             if (request.HasColumns())
             {
@@ -88,9 +95,9 @@ namespace CrestApps.RetsSdk.Services
 
             return await Requester.Get(uriBuilder.Uri, async (response) =>
             {
-                using (Stream stream = await GetStream(response))
+                using (var stream = await GetStream(response))
                 {
-                    XDocument doc = XDocument.Load(stream);
+                    var doc = XDocument.Load(stream);
 
                     int code = GetReplayCode(doc.Root);
 
@@ -98,28 +105,35 @@ namespace CrestApps.RetsSdk.Services
 
                     var result = new SearchResult(resource, request.Class, request.RestrictedIndicator);
 
-                    if (code == 0)
+                    if (code != 0) 
+                        return result;
+
+                    char delimiterValue = GetCompactDelimiter(doc);
+
+                    XNamespace ns = doc.Root.GetDefaultNamespace();
+                    XElement columns = doc.Descendants(ns + "COLUMNS").FirstOrDefault();
+
+                    var records = doc.Descendants(ns + "DATA");
+
+                    if (columns != null)
                     {
-                        char delimiterValue = GetCompactDelimiter(doc);
-
-                        XNamespace ns = doc.Root.GetDefaultNamespace();
-                        XElement columns = doc.Descendants(ns + "COLUMNS").FirstOrDefault();
-
-                        IEnumerable<XElement> records = doc.Descendants(ns + "DATA");
-
                         string[] tableColumns = columns.Value.Split(delimiterValue);
                         result.SetColumns(tableColumns);
 
                         foreach (var record in records)
                         {
                             string[] fields = record.Value.Split(delimiterValue);
-
                             SearchResultRow row = new SearchResultRow(tableColumns, fields, resource.KeyField, request.RestrictedIndicator);
-
                             result.AddRow(row);
                         }
                     }
 
+                    var maxRows = doc.Descendants(ns + "MAXROWS").ToArray();
+                    result.HasMoreRows = maxRows.Length > 0; // <MAXROWS />
+
+                    var count = doc.Descendants(ns + "COUNT").ToArray();
+                    result.ServerCount = count.Length == 0 ? (int?) null : int.Parse(count[0].Attribute("Records").Value); //<COUNT Records="137854" />
+                    
                     return result;
                 }
             }, Session.Resource);
@@ -337,7 +351,7 @@ namespace CrestApps.RetsSdk.Services
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query.Add("Resource", resource);
             query.Add("Type", type);
-            query.Add("ID", string.Join(',', ids.Select(x => x.ToString())));
+            query.Add("ID", string.Join(",", ids.Select(x => x.ToString())));
             query.Add("Location", useLocation ? "1" : "0");
 
             uriBuilder.Query = query.ToString();
@@ -400,12 +414,16 @@ namespace CrestApps.RetsSdk.Services
                         if (!message.Headers.Contains("Preferred") && response.Headers.TryGetValues("Preferred", out var preferreds))
                         {
                             message.Headers.Add("Preferred", preferreds.FirstOrDefault());
-                        }                        
+                        }
+                        if (!message.Headers.Contains("Location") && response.Headers.TryGetValues("Location", out var locations))
+                        {
+                            message.Headers.Add("Location", locations.FirstOrDefault());
+                        }
+
                         if (message.ContentId == null && response.Headers.TryGetValues("Content-Id", out var contentIds))
                         {
                             message.ContentId = contentIds.FirstOrDefault();
                         }
-                        
                         if (message.ContentLocation == null && response.Headers.TryGetValues("Content-Location", out var contentLocations))
                         {
                             message.ContentLocation = new Uri(contentLocations.FirstOrDefault());
@@ -547,7 +565,7 @@ namespace CrestApps.RetsSdk.Services
                 ContentDescription = message.Headers["Content-Description"],
                 ContentSubDescription = message.Headers["Content-Sub-Description"],
                 ContentLocation = message.ContentLocation ?? (message.Headers["Location"] != null ? new Uri(message.Headers["Location"]) : null),
-                MemeVersion = message.Headers["MIME-Version"],
+                MimeVersion = message.Headers["MIME-Version"],
                 Extension = MimeTypeMap.GetExtension(message.ContentType.MimeType)
             };
 
@@ -566,7 +584,7 @@ namespace CrestApps.RetsSdk.Services
                 file.IsPreferred = isPreferred;
             }
 
-            if (message.ContentLocation == null)
+            if (file.ContentLocation == null)
             {
                 file.Content = new MemoryStream();
                 message.Content.DecodeTo(file.Content);

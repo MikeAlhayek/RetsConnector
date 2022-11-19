@@ -50,7 +50,10 @@ namespace CrestApps.RetsSdk.Models
                 value.SetIsPrimaryKeyValue(keyIndex == index);
                 value.SetIsRestricted(RestrictedValue);
 
-                Values.TryAdd(columns[index].ToLower(), value);
+                if (!Values.ContainsKey(columns[index].ToLower()))
+                {
+                    Values.Add(columns[index].ToLower(), value);
+                }
             }
 
         }

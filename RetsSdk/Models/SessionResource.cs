@@ -25,8 +25,11 @@ namespace CrestApps.RetsSdk.Models
             {
                 return;
             }
-            
-            Capabilities.TryAdd(name, uri);
+
+            if (!Capabilities.ContainsKey(name))
+            {
+                Capabilities.Add(name, uri);
+            }
         }
 
         public Uri GetCapability(Capability name)

@@ -6,11 +6,14 @@ namespace CrestApps.RetsSdk.Models
 {
     public class SearchResult
     {
-        public RetsResource Resource { get; private set; }
-        public string ClassName { get; private set; }
+        public RetsResource Resource { get; }
+        public string ClassName { get; }
+
         private string RestrictedValue;
         private string[] Columns { get; set; }
-        private Dictionary<string, SearchResultRow> Rows { get; set; }
+        private Dictionary<string, SearchResultRow> Rows { get; }
+        public bool HasMoreRows { get; internal set; }
+        public int? ServerCount { get; internal set; }
 
         public SearchResult(RetsResource resource, string className, string restrictedValue)
         {
@@ -38,7 +41,17 @@ namespace CrestApps.RetsSdk.Models
                 throw new ArgumentNullException($"{nameof(row)} cannot be null.");
             }
 
-            return Rows.TryAdd(row.PrimaryKeyValue, row);
+            //return Rows.TryAdd(row.PrimaryKeyValue, row);
+
+            if (Rows.ContainsKey(row.PrimaryKeyValue))
+            {
+                return false;
+            }
+            else
+            {
+                Rows.Add(row.PrimaryKeyValue, row);
+                return true;
+            }
         }
 
         public bool RemoveRow(string primaryKeyValue)
@@ -68,7 +81,6 @@ namespace CrestApps.RetsSdk.Models
         public IEnumerable<SearchResultCellValue> Pluck(string columnName)
         {
             var values = Rows.Select(x => x.Value.Get(columnName));
-
             return values;
         }
 
@@ -76,7 +88,6 @@ namespace CrestApps.RetsSdk.Models
             where T : struct
         {
             IEnumerable<T> values = Rows.Select(x => x.Value.Get(columnName).Get<T>());
-
             return values;
         }
 
@@ -84,7 +95,6 @@ namespace CrestApps.RetsSdk.Models
             where T : struct
         {
             IEnumerable<T?> values = Rows.Select(x => x.Value.Get(columnName).GetNullable<T>());
-
             return values;
         }
 
@@ -102,7 +112,6 @@ namespace CrestApps.RetsSdk.Models
         {
             Columns = columns ?? throw new ArgumentNullException($"{nameof(columns)} cannot be null.");
         }
-
 
         public void SetColumns(IEnumerable<string> columns)
         {

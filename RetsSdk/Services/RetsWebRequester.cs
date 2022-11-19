@@ -89,7 +89,7 @@ namespace CrestApps.RetsSdk.Services
                 var credCache = new CredentialCache();
                 credCache.Add(new Uri(Options.LoginUrl), Options.Type.ToString(), new NetworkCredential(Options.Username, Options.Password));
 
-                return new HttpClient(new HttpClientHandler { Credentials = credCache });
+                return new HttpClient(new HttpClientHandler { Credentials = credCache, UseCookies = false });
             }
 
             HttpClient client = HttpClientFactory.CreateClient();
