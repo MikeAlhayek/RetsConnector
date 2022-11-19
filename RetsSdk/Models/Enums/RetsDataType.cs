@@ -11,6 +11,7 @@
         Small,
         Int,
         Long,
-        Decimal
+        Decimal,
+        @object
     }
 }
