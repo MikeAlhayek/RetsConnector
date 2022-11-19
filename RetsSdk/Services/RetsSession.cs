@@ -53,7 +53,7 @@ namespace CrestApps.RetsSdk.Services
                     XElement element = doc.Descendants(ns + "RETS-RESPONSE").FirstOrDefault()
                     ?? throw new RetsParsingException("Unable to find the RETS-RESPONSE element in the response.");
 
-                    var parts = element.FirstNode.ToString().Split(Environment.NewLine);
+                    var parts = element.FirstNode.ToString().Split(new []{'\r', '\n'});
                     var cookie = response.Headers.GetValues("Set-Cookie").FirstOrDefault();
 
                     return GetRetsResource(parts, cookie);
@@ -132,7 +132,6 @@ namespace CrestApps.RetsSdk.Services
 
             return null;
         }
-
 
         public bool IsStarted()
         {

@@ -54,7 +54,7 @@ namespace CrestApps.RetsSdk.Models
 
             var castable = Str.PrependOnce(v, "Version_");
 
-            return Enum.Parse<SupportedRetsVersion>(castable);
+            return (SupportedRetsVersion) Enum.Parse(typeof(SupportedRetsVersion), castable);
         }
 
     }
