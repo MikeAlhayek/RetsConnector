@@ -89,6 +89,10 @@ namespace CrestApps.RetsSdk.Services
                 var credCache = new CredentialCache();
                 credCache.Add(new Uri(Options.LoginUrl), Options.Type.ToString(), new NetworkCredential(Options.Username, Options.Password));
 
+                // The UseCookies and DefaultRequestHeaders.Add("Cookie", ...) have different behavior in net48 and net6.
+                // We need to force UseCookies = false to both have the same expect behavior
+                // See: https://stackoverflow.com/a/13287224
+
                 return new HttpClient(new HttpClientHandler { Credentials = credCache, UseCookies = false });
             }
 
