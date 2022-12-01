@@ -41,8 +41,6 @@ namespace CrestApps.RetsSdk.Models
                 throw new ArgumentNullException($"{nameof(row)} cannot be null.");
             }
 
-            //return Rows.TryAdd(row.PrimaryKeyValue, row);
-
             if (Rows.ContainsKey(row.PrimaryKeyValue))
             {
                 return false;
