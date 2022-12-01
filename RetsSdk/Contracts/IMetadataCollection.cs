@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace CrestApps.RetsSdk.Contracts
 {
-    public interface IMetadataCollection<T> where T : class
+    public interface IMetadataCollection<T> : IEnumerable<T> where T : class
     {
         void Add(T resource);
         void Remove(T resource);
@@ -14,11 +15,10 @@ namespace CrestApps.RetsSdk.Contracts
         Type GetGenericType();
     }
 
-    public interface IMetadataCollection
+    public interface IMetadataCollection : IEnumerable
     {
         string Version { get; set; }
         DateTime Date { get; set; }
-
     }
 
     public interface IMetadataCollectionLoad

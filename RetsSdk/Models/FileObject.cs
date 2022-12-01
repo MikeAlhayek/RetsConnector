@@ -12,10 +12,11 @@ namespace CrestApps.RetsSdk.Models
         public string ContentDescription { get; set; }
         public string ContentSubDescription { get; set; }
         public Uri ContentLocation { get; set; }
-        public string MemeVersion { get; set; }
+        public string MimeVersion { get; set; }
         public bool IsPreferred { get; set; }
         public string Extension { get; set; }
         public Stream Content { get; set; }
+
         private bool IsDisposed;
 
         public bool IsImage => ContentType?.MediaType.StartsWith("image", StringComparison.CurrentCultureIgnoreCase) ?? false;

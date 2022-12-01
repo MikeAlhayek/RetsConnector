@@ -13,7 +13,7 @@ namespace CrestApps.RetsSdk.Models
         public string LongName { get; set; }
         public string DbName { get; set; }
         public string ShortName { get; set; }
-        public int MaximumLength { get; set; }
+        public decimal MaximumLength { get; set; }
         public RetsDataType? DataType { get; set; }
         public int? Precision { get; set; }
         public bool Searchable { get; set; }

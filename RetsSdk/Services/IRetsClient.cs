@@ -8,7 +8,9 @@ namespace CrestApps.RetsSdk.Services
 {
     public interface IRetsClient
     {
-        Task Connect();
+        bool IsConnected { get; }
+
+        Task<bool> Connect();
         Task Disconnect();
 
         Task<SearchResult> Search(SearchRequest request);

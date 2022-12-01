@@ -102,7 +102,7 @@ namespace RetsConnector
 
             // We can also download photos
             // This will return all photos for property with the primarykey 1234
-            IEnumerable<FileObject> files = await Client.GetObject("Property", "Photo", new PhotoId(1234), false);
+            IEnumerable<FileObject> files = await Client.GetObject("Property", "Photo", new PhotoId("1234"), false);
 
             // Here is how we can iterate over the fields
             foreach (FileObject file in files)
@@ -120,11 +120,11 @@ namespace RetsConnector
             }
 
             // you can get a specific image for a given primary key like so
-            IEnumerable<FileObject> files2 = await Client.GetObject("Property", "Photo", new PhotoId(1234, 1), false);
+            IEnumerable<FileObject> files2 = await Client.GetObject("Property", "Photo", new PhotoId("1234", 1), false);
 
 
             // you can get also get images for multiple primary keys at the same time like this
-            List<PhotoId> photoIds = new List<PhotoId>() { new PhotoId(1234), new PhotoId(5678), new PhotoId(2255) };
+            List<PhotoId> photoIds = new List<PhotoId>() { new PhotoId("1234"), new PhotoId("5678"), new PhotoId("2255") };
 
             IEnumerable<FileObject> files3 = await Client.GetObject("Property", "Photo", photoIds, false);
 
