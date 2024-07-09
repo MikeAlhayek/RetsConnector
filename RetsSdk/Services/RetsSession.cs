@@ -76,6 +76,7 @@ namespace CrestApps.RetsSdk.Services
         {
             var resource = new SessionResource()
             {
+                BaseUri = LoginUri.AbsoluteUri.Substring(0, LoginUri.AbsoluteUri.Length - LoginUri.PathAndQuery.Length),
                 SessionId = MakeRetsSessionId(cookie),
                 Cookie = cookie,
             };
@@ -102,12 +103,12 @@ namespace CrestApps.RetsSdk.Services
         {
             string sessionId = ExtractSessionId(cookie);
 
-            if(string.IsNullOrWhiteSpace(sessionId))
+            if (string.IsNullOrWhiteSpace(sessionId))
             {
                 return null;
             }
 
-            string agentData = Str.Md5(Options.UserAgent + ":" + Options.UserAgentPassward);
+            string agentData = Str.Md5(Options.UserAgent + ":" + Options.UserAgentPassword);
 
             return $"{agentData}::{sessionId}:{Options.Version.AsHeader()}";
         }
